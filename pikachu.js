@@ -26,6 +26,7 @@ const imagePaths = [
 let numCols = 12;
 let numRows = 9;
 let currentCellSize = 48;
+let initialTimelineWidth = 450;
 
 // Lấy ra board
 const board = document.querySelector(".board");
@@ -2493,25 +2494,34 @@ function increaseWidth() {
 }
 
 // thiết lập thời gian cho 1 level
+/* TÌM VÀ THAY THẾ TOÀN BỘ HÀM initializeTimeLine() */
 function initializeTimeLine() {
-  // Tính toán chiều dài hiện tại của .timeline
-  // console.log('targetWidth:' + targetWidth)
-  if (targetWidth == 0) {
-    targetWidth = 450;
-  }
+  const timeline = document.querySelector(".timeline");
+  const header = document.querySelector(".header");
+  // 1. Lấy chiều rộng BAN ĐẦU thực tế của timeline (sau khi CSS đã áp dụng)
+  initialTimelineWidth = timeline.clientWidth; 
+  let targetWidth = initialTimelineWidth; // Bắt đầu từ 100% width ban đầu
 
   // Dừng interval cũ trước khi tạo một interval mới
   clearInterval(intervalID);
 
   // mỗi 1s set lại width cho timeline bằng targetWidth
   intervalID = setInterval(() => {
+    
+    // 2. Tính toán lượng giảm (quy đổi từ tỷ lệ 450px ban đầu sang chiều rộng hiện tại)
+    let decrementValue; 
+    
+    // Tỷ lệ giảm được tính: (Giá trị giảm cũ / Chiều rộng cũ 450px) * Chiều rộng hiện tại
     if (currentLevel === "4" || currentLevel === "5" || currentLevel === "6") {
-      targetWidth -= 3; // giảm 3px mỗi 1s
+      decrementValue = initialTimelineWidth * (3 / 450);
     } else if (currentLevel === "2" || currentLevel === "3") {
-      targetWidth -= 2; // giảm 2px mỗi 1s
+      decrementValue = initialTimelineWidth * (2 / 450);
     } else {
-      targetWidth -= 1; // giảm 1px mỗi 1s
+      decrementValue = initialTimelineWidth * (1 / 450);
     }
+    
+    targetWidth -= decrementValue; // Trừ theo giá trị đã quy đổi (luôn giữ đúng tỷ lệ)
+    
     if (!running) {
       clearInterval(intervalID); // Dừng interval
       return; // Kết thúc hàm
@@ -2520,7 +2530,7 @@ function initializeTimeLine() {
     // nếu width = 0 thì kết thúc
     if (targetWidth >= 0) {
       timeline.style.transition = "width 0.5s ease-in-out";
-      timeline.style.width = targetWidth + "px";
+      timeline.style.width = targetWidth + "px"; // Vẫn set bằng px, nhưng giá trị đã được tính toán lại
     } else {
       clearInterval(intervalID);
     }
@@ -2530,15 +2540,6 @@ function initializeTimeLine() {
     }
   }, 1000); // mỗi giây lặp lại việc giảm kích thước của timeline
 }
-
-// kết thúc game và hiện bảng điểm
-function loseGame() {
-  loseScore.textContent = score.textContent;
-  opacity_bgk1.style.display = "block";
-  board_lose.style.display = "block";
-}
-
-//play
 // initializeGame();
 function initializeGame() {
   updateCellIds();
@@ -2554,3 +2555,16 @@ function initializeGame() {
   checkLevel();
   initializeTimeLine();
 }
+/* THÊM VÀO CUỐI FILE pikachu.js */
+window.addEventListener('resize', () => {
+  // Đảm bảo board được tính toán lại khi kích thước màn hình thay đổi
+  initializeBoardUI();
+  
+  // Và timeline cũng cần được khởi tạo lại nếu game đang chạy
+  if (running) {
+      // Dừng interval cũ để tránh xung đột
+      clearInterval(intervalID);
+      // Khởi tạo lại timeline để lấy width ban đầu mới
+      initializeTimeLine();
+  }
+});
