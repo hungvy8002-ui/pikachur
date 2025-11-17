@@ -376,21 +376,19 @@ body {
 
 .container {
   position: relative;
-  /* background-color: red; */
-  width: 80%;
+  /*width: 80%; */ /* Giữ hoặc chỉnh sửa theo ý bạn, nhưng max-width quan trọng hơn */
+  max-width: 576px; /* Chiều rộng tối đa trên desktop (12 cột x 48px) */
   height: auto;
   top: 10px;
-  left: 48.5%;
-  transform: translateX(-50%);
+  /* left: 48.5%; */ /* <-- XÓA DÒNG NÀY */
+  /* transform: translateX(-50%); */ /* <-- XÓA DÒNG NÀY */
+  margin: 0 auto; /* <-- THÊM DÒNG NÀY ĐỂ CĂN GIỮA */
 }
 .container .board {
   position: relative;
   margin: 20px auto;
-  display: grid;
-  grid-template-columns: repeat(var(--cols), 1fr);
-  gap: 2px;
-  max-width: 100vw;      /* không vượt màn hình */
-  aspect-ratio: 1 / 1;    /* giữ board vuông */
+  width: 100%; /* <-- QUAN TRỌNG: Board chiếm 100% container */
+  /* height: 477px; */ /* <-- XÓA DÒNG NÀY (JS sẽ tính) */
 }
 .container .board .line {
   position: absolute;
@@ -560,31 +558,27 @@ body {
 }
 
 .cell {
-  width: 100%;            /* chiếm 1 ô của grid */
-  aspect-ratio: 1 / 1;    /* ô vuông */
   background-position: center;
   background-size: cover;
   border-radius: 3px;
   cursor: pointer;
   box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.5);
   transition: opacity 0.2s ease-in-out;
+  position: absolute;
   border: 2px solid transparent;
   color: transparent;
-  position: relative;     /* bỏ absolute */
 }
 .cell.clicked {
   opacity: 0.6 !important;
 }
 
 .Hline {
-  width: 48px;
   height: 5px;
   background: linear-gradient(to right, hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%), hsl(120, 100%, 50%));
 }
 
 .Vline {
   width: 5px;
-  height: 48px;
   background: linear-gradient(to top, hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%), hsl(120, 100%, 50%));
 }
 
@@ -691,36 +685,53 @@ body {
   animation-delay: 0.3s;
   width: 18px;
 }
-/* ====== RESPONSIVE MOBILE OPTIMIZED ====== */
+/* THÊM VÀO CUỐI FILE style.css */
 @media (max-width: 600px) {
-
-  /* Auto scale board theo chiều rộng màn hình */
-  .container .board {
-    transform: scale(calc(100vw / 500)); /* 500 = width gốc */
-    transform-origin: top center;
+  /* Điều chỉnh kích thước và vị trí header */
+  .header i {
+    font-size: 28px;
+    margin: 25px 10px;
   }
-
-  /* Header thu nhỏ vừa đẹp, không che board */
-  .header {
-    transform: scale(0.8);
-    transform-origin: top left;
+  .header .right_header {
+    width: auto;
   }
-
-  /* Menu cấp độ thu nhỏ tránh đè board */
-  .board_level {
-    transform: scale(0.8);
-    transform-origin: bottom right;
-    right: 5px;
-    bottom: 20px;
+  .header .right_header span {
+    font-size: 28px;
   }
+  .header .timeline {
+    width: 90%; /* Thanh thời gian co lại */
+    height: 25px;
+  }
+  .header .numHelp, .header .numReload {
+    top: 18px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+  }
+  .header .numHelp { left: 120px; }
+  .header .numReload { left: 200px; }
 
-  /* Icon âm thanh */
-  #soundButton img {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
+  /* Điều chỉnh các bảng pop-up */
+  .board_guide, .board_pause, .board_lose, .board_win {
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50px;
+    height: auto;
+    padding-bottom: 50px;
+  }
+  
+  /* Điều chỉnh nút bấm trong pop-up */
+  .board_guide button {
+      right: 10px;
+      bottom: -20px;
+  }
+  
+  /* Ẩn bớt các bảng phụ cho gọn */
+  .board_level, .board_rule {
+    display: none; 
   }
 }
-
 
 /*# sourceMappingURL=style.css.map */
