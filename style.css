@@ -418,6 +418,11 @@ body {
   display: flex; 
   flex-direction: column; 
   gap: 10px;
+  /* Nếu bạn giữ lại selector .board_level.level, hãy đảm bảo nó không gây xung đột */
+.board_level.level {
+    /* Loại bỏ các thuộc tính định vị cũ */
+    /* top, left, transform, v.v... */
+    display: flex !important; /* Đảm bảo nó dùng Flexbox mới */
 }
 .board_level .levels button {
   
@@ -429,6 +434,7 @@ body {
   background-color: rgba(231, 84, 84, 0.5);
   color: black;
   border-radius: 10px;
+  /* Nếu bạn giữ lại selector .board_level.level, hãy đảm bảo nó không gây xung đột */
 }
 .board_rule {
   position: absolute;
