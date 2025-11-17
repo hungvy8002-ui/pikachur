@@ -405,10 +405,10 @@ body {
   color: white;
   position: fixed;
   z-index: 5000;
-  top: 10px; /* Cách đỉnh 10px */
+  top: 100px; /* Cách đỉnh 10px */
   right: 10px; /* Nằm sát lề phải */
   width: 100px; /* Chiều rộng cho cột nút */
-  height: 90%; /* Chiếm 90% chiều cao màn hình */
+  height: 65%; /* Chiếm 90% chiều cao màn hình */
   overflow-y: auto; /* <--- CHO PHÉP CUỘN NẾU CÓ NHIỀU NÚT */
   background-color: rgba(0, 0, 0, 0.5); /* Nền mờ cho dễ nhìn */
   padding: 10px 5px;
