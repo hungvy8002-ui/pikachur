@@ -2379,49 +2379,35 @@ function drawLine(path, locateFirst, locateSecond) {
         default:
           break;
       }
-      let widthLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("width").valueOf()
-      );
-      let heightLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("height").valueOf()
-      );
-      let topLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("top").valueOf()
-      );
-      let leftLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("left").valueOf()
-      );
-      // console.log('======== newWidthLine:' + (widthLine))
-      // console.log('======== newHeightLine:' + (heightLine))
-      // console.log('======== newTopLine:' + (topLine - (locateFirst[0] * 45)))
-      // console.log('======== newLeftLine:' + (leftLine + (locateFirst[1] * 45)))
+      let widthLine = parseFloat(window.getComputedStyle(line).getPropertyValue("width").valueOf());
+      let heightLine = parseFloat(window.getComputedStyle(line).getPropertyValue("height").valueOf());
+      let topLine = parseFloat(window.getComputedStyle(line).getPropertyValue("top").valueOf());
+      let leftLine = parseFloat(window.getComputedStyle(line).getPropertyValue("left").valueOf());
+      let centerOffsetW = (currentCellSize / 2) - (widthLine / 2);
+      let centerOffsetH = (currentCellSize / 2) - (heightLine / 2);
       switch (lineType) {
         case "r":
-          line.style.width = widthLine + widthLine * (len - 1) + "px";
-          // line.style.height = heightLine;
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px"; // fix
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px";
-          break;
-        case "l":
-          line.style.width = widthLine + widthLine * (len - 1) + "px";
-          // line.style.height = heightLine;
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px";
-          line.style.left = leftLine + (turn[1] - (len + 1)) * 48 + "px";
-          break;
-        case "u":
-          // line.style.width = widthLine;
-          line.style.height = heightLine + heightLine * (len - 1) + "px";
-          line.style.top = topLine + (turn[0] - (len + 1)) * 48 + "px"; // top : true , left : fasle
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px"; // top : true, left : true
-          break;
-        case "d":
-          // line.style.width = widthLine;
-          line.style.height = heightLine + heightLine * (len - 1) + "px";
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px"; // -/+
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px";
-          break;
-        default:
-          break;
+      line.style.width = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + centerOffsetH + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      break;
+    case "l":
+      line.style.width = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + centerOffsetH + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - len) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      break;
+    case "u":
+      line.style.height = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - len) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + centerOffsetW + "px"; // <-- Dùng currentCellSize
+      break;
+    case "d":
+      line.style.height = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + centerOffsetW + "px"; // <-- Dùng currentCellSize
+      break;
+    default:
+      break;
       }
       // if (lineType === 'Hline') {
       // line.style.width = widthLine + widthLine * (len - 1) + "px";
