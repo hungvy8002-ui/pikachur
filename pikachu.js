@@ -30,17 +30,34 @@ let numRows = 9;
 const board = document.querySelector(".board");
 
 // thiết lập lại kích thước của board khi biết số hàng và cột
-board.style.width = numCols * 48 + "px";
-board.style.height = numRows * 48 + "px";
+// set số cột cho grid
+board.style.setProperty('--cols', numCols);
 
-// Tạo và thêm các div vào trong board
-for (let row = 1; row <= numRows; row++) {
-  for (let col = 1; col <= numCols; col++) {
-    const cell = document.createElement("div");
-    cell.className = "cell";
-    cell.id = ((row - 1) * numCols + col).toString();
-    cell.textContent = "1";
-    board.appendChild(cell);
+// tạo ô
+let cells = [];
+for (let i = 0; i < numRows * numCols; i++) {
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.textContent = "1";
+  board.appendChild(cell);
+  cells.push(cell);
+}
+
+// chuyển từ tọa độ ma trận sang ô
+function convertMatrixToCell(x, y) {
+  return cells[numCols * (x - 1) + (y - 1)];
+}
+
+// tạo ma trận + viền 0
+let matrix = [];
+for (let i = 0; i < numRows + 2; i++) {
+  matrix[i] = [];
+  for (let j = 0; j < numCols + 2; j++) {
+    if (i === 0 || i === numRows + 1 || j === 0 || j === numCols + 1) {
+      matrix[i][j] = "0";
+    } else {
+      matrix[i][j] = convertMatrixToCell(i, j).textContent;
+    }
   }
 }
 //Mảng các ô trong board

@@ -386,13 +386,11 @@ body {
 .container .board {
   position: relative;
   margin: 20px auto;
-  width: 468px;
-  height: 477px;
-  /* border: 2px solid #333; */
-  /* display: grid;
-  grid-template-columns: repeat(10, auto);
-  grid-gap: 1px; */
-  /* background-color: #fff; */
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 2px;
+  max-width: 100vw;      /* không vượt màn hình */
+  aspect-ratio: 1 / 1;    /* giữ board vuông */
 }
 .container .board .line {
   position: absolute;
@@ -562,17 +560,17 @@ body {
 }
 
 .cell {
-  width: 45px;
-  height: 45px;
+  width: 100%;            /* chiếm 1 ô của grid */
+  aspect-ratio: 1 / 1;    /* ô vuông */
   background-position: center;
   background-size: cover;
   border-radius: 3px;
   cursor: pointer;
   box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.5);
   transition: opacity 0.2s ease-in-out;
-  position: absolute;
   border: 2px solid transparent;
   color: transparent;
+  position: relative;     /* bỏ absolute */
 }
 .cell.clicked {
   opacity: 0.6 !important;
