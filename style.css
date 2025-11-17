@@ -736,9 +736,11 @@ body {
   .board_level {
     width: 75px; /* Chiều rộng hẹp hơn cho mobile */
     right: 0px; /* Dính sát lề phải */
-    top: 50%; /* Căn giữa theo chiều dọc */
-    transform: translateY(-50%); 
-    height: 75%; /* Chiếm 75% chiều cao màn hình */
+    top: auto; /* Căn giữa theo chiều dọc */
+    transform: none; 
+    bottom: 10px;
+    height: 65%; 
+    overflow-y: auto; /* Chiếm 75% chiều cao màn hình */
   }
   
   .board_level button {
