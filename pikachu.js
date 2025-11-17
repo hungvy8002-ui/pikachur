@@ -25,62 +25,58 @@ const imagePaths = [
 // số hàng và số cột qui định
 let numCols = 12;
 let numRows = 9;
+let currentCellSize = 48;
 
 // Lấy ra board
 const board = document.querySelector(".board");
 
 // thiết lập lại kích thước của board khi biết số hàng và cột
-// set số cột cho grid
-board.style.setProperty('--cols', numCols);
 
-// tạo ô
-let cells = [];
-for (let i = 0; i < numRows * numCols; i++) {
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  cell.textContent = "1";
-  board.appendChild(cell);
-  cells.push(cell);
-}
 
-// chuyển từ tọa độ ma trận sang ô
-function convertMatrixToCell(x, y) {
-  return cells[numCols * (x - 1) + (y - 1)];
-}
-
-// tạo ma trận + viền 0
-let matrix = [];
-for (let i = 0; i < numRows + 2; i++) {
-  matrix[i] = [];
-  for (let j = 0; j < numCols + 2; j++) {
-    if (i === 0 || i === numRows + 1 || j === 0 || j === numCols + 1) {
-      matrix[i][j] = "0";
-    } else {
-      matrix[i][j] = convertMatrixToCell(i, j).textContent;
-    }
+// Tạo và thêm các div vào trong board
+for (let row = 1; row <= numRows; row++) {
+  for (let col = 1; col <= numCols; col++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.id = ((row - 1) * numCols + col).toString();
+    cell.textContent = "1";
+    board.appendChild(cell);
   }
 }
 //Mảng các ô trong board
 let cells = document.querySelectorAll(".cell");
+/* TÌM VÀ THAY THẾ TOÀN BỘ HÀM initializeBoardUI() */
 function initializeBoardUI() {
+  // 1. Lấy chiều rộng hiện tại của board
+  const boardWidth = board.clientWidth;
+
+  // 2. Tính toán kích thước của 1 cell (Đảm bảo tỉ lệ 1:1)
+  currentCellSize = boardWidth / numCols;
+
+  // 3. Set lại chiều cao của board dựa trên kích thước ô mới
+  board.style.height = numRows * currentCellSize + "px";
+
   let leftOffset = 0;
   let topOffset = 0;
   let cellCount = 0;
   // xếp các vị trí cho thẻ khi dùng absoluted
   cells.forEach((cell, i) => {
+    // 4. Dùng currentCellSize để gán kích thước VÀ vị trí
+    cell.style.width = currentCellSize + "px";
+    cell.style.height = currentCellSize + "px";
     cell.style.left = leftOffset + "px";
     cell.style.top = topOffset + "px";
-    leftOffset += 48; // Tăng giá trị left thêm 48px
+
+    leftOffset += currentCellSize; // <-- Dùng cellSize thay vì 48
     cellCount++;
     if (cellCount >= numCols) {
       // Nếu đã vẽ đủ số cột trong hàng
-      topOffset += 48; // Di chuyển xuống dòng mới
+      topOffset += currentCellSize; // <-- Dùng cellSize thay vì 48
       leftOffset = 0; // Reset left về 0
       cellCount = 0; // Reset số lượng ô đã vẽ
     }
   });
 }
-
 // hàm chuyển đổi từ vị trí trên ma trận thành các ô trên board
 function convertMatrixToCell(x, y) {
   // x, y là tọa độ tương ứng
