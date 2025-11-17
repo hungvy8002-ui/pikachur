@@ -730,8 +730,21 @@ body {
   }
   
   /* Ẩn bớt các bảng phụ cho gọn */
-  .board_level, .board_rule {
+  .board_rule {
     display: none; 
+  }
+  .board_level {
+    width: 75px; /* Chiều rộng hẹp hơn cho mobile */
+    right: 0px; /* Dính sát lề phải */
+    top: 50%; /* Căn giữa theo chiều dọc */
+    transform: translateY(-50%); 
+    height: 75%; /* Chiếm 75% chiều cao màn hình */
+  }
+  
+  .board_level button {
+      width: 65px; /* Nút hẹp hơn */
+      height: 30px;
+      font-size: 13px;
   }
 }
 
