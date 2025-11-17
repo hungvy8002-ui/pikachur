@@ -403,33 +403,33 @@ body {
 
 .board_level {
   color: white;
-  position: absolute;
-  right: 60px;
-  bottom: 60px;
-  width: 20%;
-  height: auto;
-  text-align: center;
-}
-.board_level .levels {
-  display: grid;
-  grid-template-columns: auto auto;
+  position: fixed;
+  z-index: 5000;
+  top: 10px; /* Cách đỉnh 10px */
+  right: 10px; /* Nằm sát lề phải */
+  width: 100px; /* Chiều rộng cho cột nút */
+  height: 90%; /* Chiếm 90% chiều cao màn hình */
+  overflow-y: auto; /* <--- CHO PHÉP CUỘN NẾU CÓ NHIỀU NÚT */
+  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ cho dễ nhìn */
+  padding: 10px 5px;
+  border-radius: 10px;
+  
+  /* SỬ DỤNG FLEXBOX ĐỂ XẾP CỘT DỌC */
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px;
 }
 .board_level .levels button {
-  font-size: 15px;
-  font-weight: 700;
-  width: 120px;
-  height: 30px;
+  
+  width: 90px;
+  height: 40px;
+  margin: 0 auto; /* Căn giữa nút trong cột */
+  font-size: 16px;
+  flex-shrink: 0; 
   background-color: rgba(231, 84, 84, 0.5);
   color: black;
   border-radius: 10px;
-  margin-right: 20px;
-  margin-top: 20px;
 }
-.board_level .levels button:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-
 .board_rule {
   position: absolute;
   background-color: rgba(88, 210, 77, 0.5);
