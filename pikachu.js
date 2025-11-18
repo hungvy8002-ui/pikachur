@@ -25,13 +25,14 @@ const imagePaths = [
 // số hàng và số cột qui định
 let numCols = 12;
 let numRows = 9;
+let currentCellSize = 48;
+let initialTimelineWidth = 450;
 
 // Lấy ra board
 const board = document.querySelector(".board");
 
 // thiết lập lại kích thước của board khi biết số hàng và cột
-board.style.width = numCols * 48 + "px";
-board.style.height = numRows * 48 + "px";
+
 
 // Tạo và thêm các div vào trong board
 for (let row = 1; row <= numRows; row++) {
@@ -45,25 +46,38 @@ for (let row = 1; row <= numRows; row++) {
 }
 //Mảng các ô trong board
 let cells = document.querySelectorAll(".cell");
+/* TÌM VÀ THAY THẾ TOÀN BỘ HÀM initializeBoardUI() */
 function initializeBoardUI() {
+  // 1. Lấy chiều rộng hiện tại của board
+  const boardWidth = board.clientWidth;
+
+  // 2. Tính toán kích thước của 1 cell (Đảm bảo tỉ lệ 1:1)
+  currentCellSize = boardWidth / numCols;
+
+  // 3. Set lại chiều cao của board dựa trên kích thước ô mới
+  board.style.height = numRows * currentCellSize + "px";
+
   let leftOffset = 0;
   let topOffset = 0;
   let cellCount = 0;
   // xếp các vị trí cho thẻ khi dùng absoluted
   cells.forEach((cell, i) => {
+    // 4. Dùng currentCellSize để gán kích thước VÀ vị trí
+    cell.style.width = currentCellSize + "px";
+    cell.style.height = currentCellSize + "px";
     cell.style.left = leftOffset + "px";
     cell.style.top = topOffset + "px";
-    leftOffset += 48; // Tăng giá trị left thêm 48px
+
+    leftOffset += currentCellSize; // <-- Dùng cellSize thay vì 48
     cellCount++;
     if (cellCount >= numCols) {
       // Nếu đã vẽ đủ số cột trong hàng
-      topOffset += 48; // Di chuyển xuống dòng mới
+      topOffset += currentCellSize; // <-- Dùng cellSize thay vì 48
       leftOffset = 0; // Reset left về 0
       cellCount = 0; // Reset số lượng ô đã vẽ
     }
   });
 }
-
 // hàm chuyển đổi từ vị trí trên ma trận thành các ô trên board
 function convertMatrixToCell(x, y) {
   // x, y là tọa độ tương ứng
@@ -2366,49 +2380,35 @@ function drawLine(path, locateFirst, locateSecond) {
         default:
           break;
       }
-      let widthLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("width").valueOf()
-      );
-      let heightLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("height").valueOf()
-      );
-      let topLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("top").valueOf()
-      );
-      let leftLine = parseFloat(
-        window.getComputedStyle(line).getPropertyValue("left").valueOf()
-      );
-      // console.log('======== newWidthLine:' + (widthLine))
-      // console.log('======== newHeightLine:' + (heightLine))
-      // console.log('======== newTopLine:' + (topLine - (locateFirst[0] * 45)))
-      // console.log('======== newLeftLine:' + (leftLine + (locateFirst[1] * 45)))
+      let widthLine = parseFloat(window.getComputedStyle(line).getPropertyValue("width").valueOf());
+      let heightLine = parseFloat(window.getComputedStyle(line).getPropertyValue("height").valueOf());
+      let topLine = parseFloat(window.getComputedStyle(line).getPropertyValue("top").valueOf());
+      let leftLine = parseFloat(window.getComputedStyle(line).getPropertyValue("left").valueOf());
+      let centerOffsetW = (currentCellSize / 2) - (widthLine / 2);
+      let centerOffsetH = (currentCellSize / 2) - (heightLine / 2);
       switch (lineType) {
         case "r":
-          line.style.width = widthLine + widthLine * (len - 1) + "px";
-          // line.style.height = heightLine;
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px"; // fix
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px";
-          break;
-        case "l":
-          line.style.width = widthLine + widthLine * (len - 1) + "px";
-          // line.style.height = heightLine;
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px";
-          line.style.left = leftLine + (turn[1] - (len + 1)) * 48 + "px";
-          break;
-        case "u":
-          // line.style.width = widthLine;
-          line.style.height = heightLine + heightLine * (len - 1) + "px";
-          line.style.top = topLine + (turn[0] - (len + 1)) * 48 + "px"; // top : true , left : fasle
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px"; // top : true, left : true
-          break;
-        case "d":
-          // line.style.width = widthLine;
-          line.style.height = heightLine + heightLine * (len - 1) + "px";
-          line.style.top = topLine + (turn[0] - 1) * 48 + "px"; // -/+
-          line.style.left = leftLine + (turn[1] - 1) * 48 + "px";
-          break;
-        default:
-          break;
+      line.style.width = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + centerOffsetH + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      break;
+    case "l":
+      line.style.width = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + centerOffsetH + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - len) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      break;
+    case "u":
+      line.style.height = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - len) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + centerOffsetW + "px"; // <-- Dùng currentCellSize
+      break;
+    case "d":
+      line.style.height = currentCellSize * len + "px"; // <-- Dùng currentCellSize
+      line.style.top = topLine + (turn[0] - 1) * currentCellSize + "px"; // <-- Dùng currentCellSize
+      line.style.left = leftLine + (turn[1] - 1) * currentCellSize + centerOffsetW + "px"; // <-- Dùng currentCellSize
+      break;
+    default:
+      break;
       }
       // if (lineType === 'Hline') {
       // line.style.width = widthLine + widthLine * (len - 1) + "px";
@@ -2494,25 +2494,34 @@ function increaseWidth() {
 }
 
 // thiết lập thời gian cho 1 level
+/* TÌM VÀ THAY THẾ TOÀN BỘ HÀM initializeTimeLine() */
 function initializeTimeLine() {
-  // Tính toán chiều dài hiện tại của .timeline
-  // console.log('targetWidth:' + targetWidth)
-  if (targetWidth == 0) {
-    targetWidth = 450;
-  }
+  const timeline = document.querySelector(".timeline");
+  const header = document.querySelector(".header");
+  // 1. Lấy chiều rộng BAN ĐẦU thực tế của timeline (sau khi CSS đã áp dụng)
+  initialTimelineWidth = timeline.clientWidth; 
+  let targetWidth = initialTimelineWidth; // Bắt đầu từ 100% width ban đầu
 
   // Dừng interval cũ trước khi tạo một interval mới
   clearInterval(intervalID);
 
   // mỗi 1s set lại width cho timeline bằng targetWidth
   intervalID = setInterval(() => {
+    
+    // 2. Tính toán lượng giảm (quy đổi từ tỷ lệ 450px ban đầu sang chiều rộng hiện tại)
+    let decrementValue; 
+    
+    // Tỷ lệ giảm được tính: (Giá trị giảm cũ / Chiều rộng cũ 450px) * Chiều rộng hiện tại
     if (currentLevel === "4" || currentLevel === "5" || currentLevel === "6") {
-      targetWidth -= 3; // giảm 3px mỗi 1s
+      decrementValue = initialTimelineWidth * (3 / 450);
     } else if (currentLevel === "2" || currentLevel === "3") {
-      targetWidth -= 2; // giảm 2px mỗi 1s
+      decrementValue = initialTimelineWidth * (2 / 450);
     } else {
-      targetWidth -= 1; // giảm 1px mỗi 1s
+      decrementValue = initialTimelineWidth * (1 / 450);
     }
+    
+    targetWidth -= decrementValue; // Trừ theo giá trị đã quy đổi (luôn giữ đúng tỷ lệ)
+    
     if (!running) {
       clearInterval(intervalID); // Dừng interval
       return; // Kết thúc hàm
@@ -2521,7 +2530,7 @@ function initializeTimeLine() {
     // nếu width = 0 thì kết thúc
     if (targetWidth >= 0) {
       timeline.style.transition = "width 0.5s ease-in-out";
-      timeline.style.width = targetWidth + "px";
+      timeline.style.width = targetWidth + "px"; // Vẫn set bằng px, nhưng giá trị đã được tính toán lại
     } else {
       clearInterval(intervalID);
     }
@@ -2531,15 +2540,6 @@ function initializeTimeLine() {
     }
   }, 1000); // mỗi giây lặp lại việc giảm kích thước của timeline
 }
-
-// kết thúc game và hiện bảng điểm
-function loseGame() {
-  loseScore.textContent = score.textContent;
-  opacity_bgk1.style.display = "block";
-  board_lose.style.display = "block";
-}
-
-//play
 // initializeGame();
 function initializeGame() {
   updateCellIds();
@@ -2555,3 +2555,16 @@ function initializeGame() {
   checkLevel();
   initializeTimeLine();
 }
+/* THÊM VÀO CUỐI FILE pikachu.js */
+window.addEventListener('resize', () => {
+  // Đảm bảo board được tính toán lại khi kích thước màn hình thay đổi
+  initializeBoardUI();
+  
+  // Và timeline cũng cần được khởi tạo lại nếu game đang chạy
+  if (running) {
+      // Dừng interval cũ để tránh xung đột
+      clearInterval(intervalID);
+      // Khởi tạo lại timeline để lấy width ban đầu mới
+      initializeTimeLine();
+  }
+});
